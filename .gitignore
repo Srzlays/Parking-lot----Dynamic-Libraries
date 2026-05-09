@@ -1,3 +1,8 @@
 *.pdf
 *.docx
 *.drawio
+
+*.exe
+
+output/
+.vscode/
