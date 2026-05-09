@@ -1,21 +1,4 @@
-#include <iostream>
-#include <cstring>
-#include <string>
-#include <ctime>
-
-using namespace std;
-
-//---¡clase-parqueader!
-class Cliente{
-    private:
-        string placa;
-    public:
-        Cliente();
-        string GenerarPlaca();
-        void MostrarPlaca();
-        
-
-};
+#include "Cliente.h"
 
 Cliente::Cliente(){
     placa = ""; 
@@ -33,19 +16,8 @@ string Cliente::GenerarPlaca(){
     };
 
     return placa;
-    
 };
 
 void Cliente::MostrarPlaca() {
     cout << "Placa: " << placa << endl;
-}
-
-int main(){
-    srand(time(0));
-    Cliente cliente;
-    cliente.GenerarPlaca();
-    cliente.MostrarPlaca();
-
-    return 0;
 };
- 
