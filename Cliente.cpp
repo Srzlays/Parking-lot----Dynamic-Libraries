@@ -19,5 +19,10 @@ string Cliente::GenerarPlaca(){
 };
 
 void Cliente::MostrarPlaca() {
-    cout << "Placa: " << placa << endl;
+    placas.push_back(placa);
+    for (int i = 0; i < placas.size(); i++)
+    {
+        cout << "Placa: " << placas[i] << endl;
+    }
+    
 };

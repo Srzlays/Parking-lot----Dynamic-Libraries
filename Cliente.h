@@ -6,6 +6,7 @@
 #include <ctime>
 #include <cstdlib>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -13,6 +14,7 @@ using namespace std;
 class Cliente{
     private:
         string placa;
+        vector <string> placas;
     public:
         Cliente();
         string GenerarPlaca();
