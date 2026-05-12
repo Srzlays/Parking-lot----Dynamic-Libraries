@@ -1,13 +1,21 @@
 #include "Cliente.h"
+#include <chrono>
+#include <windows.h>
 
 
 using namespace std;
 
+
 int main(){
     srand(time(0));
     Cliente cliente;
-    cliente.GenerarPlaca();
-    cliente.MostrarPlaca();
+    while (true){
+        cliente.GenerarPlaca();
+        cliente.MostrarPlaca();
+    
+        Sleep(5000);
+    };
+    
 
     return 0;
 };
