@@ -15,14 +15,11 @@ string Cliente::GenerarPlaca(){
         placa += numero;
     };
 
+    placas.push_back(placa);
+
     return placa;
 };
 
 void Cliente::MostrarPlaca() {
-    placas.push_back(placa);
-    for (int i = 0; i < placas.size(); i++)
-    {
-        cout << "Placa: " << placas[i] << endl;
-    }
-    
+    cout << "Placa: " << placa << endl;
 };
