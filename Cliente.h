@@ -15,10 +15,14 @@ class Cliente{
     private:
         string placa;
         vector <string> placas;
+        vector <string> placas_enviar;
     public:
         Cliente();
         string GenerarPlaca();
+        void EnviarPlaca();
+        void MostrarVectores();
         void MostrarPlaca();
+        vector<string>& ObtenerPlacas();
 };
  
 #endif
