@@ -38,7 +38,7 @@ void Cliente::EnviarPlaca(){
 
 void Cliente::MostrarVectores(){
     cout << "n\nPLACA(" << placas.size() << "):\n";
-    for (auto &p: placa){
+    for (auto &p: placas){
         cout << p << endl;
     };
 
