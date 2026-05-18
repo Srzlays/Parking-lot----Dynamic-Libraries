@@ -1,8 +1,10 @@
 *.pdf
 *.docx
 *.drawio
+*.json
 
 *.exe
-
+*.out
 output/
 .vscode/
+
