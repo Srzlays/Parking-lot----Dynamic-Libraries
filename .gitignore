@@ -5,6 +5,8 @@
 
 *.exe
 *.out
+*.dll
+
 output/
 .vscode/
 
