@@ -2,23 +2,26 @@
 #define SERVIDOR_H
 
 #include <iostream>
-#include <cstring>
-#include <ctime>
-#include <cstdlib>
-#include <string>
 #include <vector>
+#include <string>
 
 using namespace std;
 
-class Servidor{
-    private:
-        string placa_;
-        vector <string> placas_;
-        
-    public:
-        Servidor();
-
+struct Vehiculo{
+    string placa;
+    string celda;
+    string horaEntrada;
+    string horaSalida;
 };
 
+class Servidor {
+    private:
+    vector<Vehiculo> parqueadero;
+        void GuardarJSON();
+    
+    public:
+        void Iniciar();
+        string ObtenerHoraActual();
+};
 
 #endif

@@ -2,28 +2,31 @@
 #define CLIENTE_H
 
 #include <iostream>
-#include <cstring>
-#include <ctime>
-#include <cstdlib>
-#include <string>
 #include <vector>
+#include <string>
+#include <map>
 
 using namespace std;
 
-//---¡clase-parqueader!
-class Cliente{
-    private:
-        string placa;
-        vector <string> placas;
-        vector <string> placas_enviar;
-    public:
-        Cliente();
-        string GenerarPlaca();
-        void EnviarPlaca();
-        void MostrarVectores();
-        void MostrarPlaca();
-        vector<string>& ObtenerPlacas();
+class Cliente {
+
+private:
+
+    string placa;
+    vector<string> placas_fuera;
+    vector<string> placas_dentro;
+    map<string, string> placas_celdas;
+
+public:
+
+    Cliente();
+    string GenerarPlaca();
+    string GenerarCelda();
+    void EnviarPlaca();
+    void MostrarVectores();
+    vector<string>& ObtenerPlacas();
 };
- 
+
 #endif
+
 

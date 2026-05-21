@@ -2,11 +2,13 @@
 *.docx
 *.drawio
 *.json
+main.cpp
 
 *.exe
 *.out
 *.dll
+.*so
 
 output/
 .vscode/
-
+server
