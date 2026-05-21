@@ -4,17 +4,17 @@
 
 extern "C" {
 
-__attribute__((visibility("default")))
-void EjecutarProcesos() {
+    __attribute__((visibility("default")))
+    void EjecutarProcesos() {
 
-    srand(time(0));
+        srand(time(0));
 
-    Cliente cliente;
+        Cliente cliente;
 
-    Procesos procesos(cliente);
+        Procesos procesos(cliente);
 
-    procesos.Procesar();
-}
+        procesos.Procesar();
+    }
 
 }
 

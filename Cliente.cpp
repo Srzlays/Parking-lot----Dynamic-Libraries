@@ -132,7 +132,6 @@ void Cliente::EnviarPlaca() {
     close(sock);
 }
 
-
 void Cliente::MostrarVectores() {
 
     cout << "\nFUERA ("
