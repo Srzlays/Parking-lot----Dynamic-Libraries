@@ -177,7 +177,7 @@ void Cliente::EnviarPlaca() {
     inet_pton(
         AF_INET,
         //"127.0.0.1",
-        "192.168.0.17",
+        "10.1.35.69",
         &serv_addr.sin_addr
     );
 

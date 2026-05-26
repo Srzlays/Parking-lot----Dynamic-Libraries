@@ -11,14 +11,12 @@ using namespace std;
 class Cliente {
 
 private:
-
     string placa;
     vector<string> placas_fuera;
     vector<string> placas_dentro;
     map<string, string> placas_celdas;
 
 public:
-
     Cliente();
     string GenerarPlaca();
     string GenerarCelda();

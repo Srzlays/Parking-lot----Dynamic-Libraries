@@ -29,7 +29,7 @@ to dectivate enviroment
 .\venv\Scripts\Activate.ps1
 ```
 3. Install streamlit and streamli_autorefresh.
-In ubinut 24.04
+In ubuntu 24.04
 ```bash
 pip3 install streamlit
 pip3 install streamlit_autorefresh
@@ -42,11 +42,11 @@ pip install streamlit_autorefresh
 
 ## Excution and Compilation
 ### From ubuntu 24.04
-1. Generate the compiled \textit{.so} libary
+1. Generate the compiled .so libary
 ```bash
 g++ -shared -f -fPIC Envolruta.cpp Procesos.cpp Cliente.cpp -o libprocesos.so
 ```
-2. Generaare the \textit{servidor} executable
+2. Generaare the servidor executable
 ```bash
 g++ Server.cpp main_server.cpp -o server
 ```
@@ -64,11 +64,11 @@ streamlit run app.py
 ```
 
 ### from windows 11
-1. Generate the compiled \textit{.dll} libary
+1. Generate the compiled .dll libary
 ```bash
 g++ -shared -o procesos.dll Envoltura.cpp Procesos.cpp Cliente.cpp -lws2_32 -static -static-libgcc -static-libstdc++
 ```
-2. Generaare the \textit{servidor.exe} executable
+2. Generaare the servidor.exe executable
 ```bash
 g++ -o servidor.exe servidor_main.cpp Servidor.cpp -lws2_32 
 ```
