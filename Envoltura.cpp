@@ -1,20 +1,20 @@
 #include "Procesos.h"
-
 #include <ctime>
 
-extern "C" {
+#ifdef _WIN32
+    #define EXPORT extern "C" __declspec(dllexport)
+#else
+    #define EXPORT extern "C" __attribute__((visibility("default")))
+#endif
 
-    __attribute__((visibility("default")))
-    void EjecutarProcesos() {
+EXPORT void EjecutarProcesos() {
 
-        srand(time(0));
+    srand(time(0));
 
-        Cliente cliente;
+    Cliente cliente;
 
-        Procesos procesos(cliente);
+    Procesos procesos(cliente);
 
-        procesos.Procesar();
-    }
-
+    procesos.Procesar();
 }
 

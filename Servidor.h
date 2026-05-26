@@ -15,13 +15,14 @@ struct Vehiculo{
 };
 
 class Servidor {
-    private:
+
+  private:
     vector<Vehiculo> parqueadero;
-        void GuardarJSON();
-    
-    public:
-        void Iniciar();
-        string ObtenerHoraActual();
+    void GuardarJSON();
+
+  public:
+    void Iniciar();
+    string ObtenerHoraActual();
 };
 
 #endif

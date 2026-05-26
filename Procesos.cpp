@@ -1,5 +1,11 @@
+#ifdef _WIN32
+    #include <windows.h>
+#else
+    #include <unistd.h>
+#endif
 #include "Procesos.h"
-#include <unistd.h>
+
+//#include <unistd.h>
 
 Procesos::Procesos(Cliente &cliente)
     : cliente(cliente) {
@@ -13,12 +19,9 @@ void Procesos::Procesar() {
             cliente.ObtenerPlacas().size() < 10
         ) {
 
-            string nueva_placa =
-                cliente.GenerarPlaca();
+            string nueva_placa = cliente.GenerarPlaca();
 
-            cout << "Generada: "
-                 << nueva_placa
-                 << endl;
+            cout << "Generada: " << nueva_placa << endl;
         }
         */
         string nueva_placa = cliente.GenerarPlaca();
@@ -27,9 +30,15 @@ void Procesos::Procesar() {
         //cliente.MostrarVectores();
         cliente.MostrarVectores();
         cliente.EnviarPlaca();
+        //usleep(5000000);
+#ifdef _WIN32
+        Sleep(5000);
+#else
         usleep(5000000);
+#endif
 
         //cliente.EnviarPlaca();
     }
 }
+
 

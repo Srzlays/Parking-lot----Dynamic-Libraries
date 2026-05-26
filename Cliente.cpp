@@ -1,11 +1,21 @@
+#ifdef _WIN32
+    #include <winsock2.h>
+    #include <ws2tcpip.h>
+    #pragma comment(lib, "ws2_32.lib")
+#else
+    #include <sys/socket.h>
+    #include <arpa/inet.h>
+    #include <unistd.h>
+#endif
+
 #include "Cliente.h"
 
 #include <ctime>
 #include <cstdlib>
 #include <algorithm>
 
-#include <sys/socket.h>
-#include <arpa/inet.h>
+//#include <sys/socket.h>
+//#include <arpa/inet.h>
 #include <unistd.h>
 
 Cliente::Cliente() {
@@ -34,24 +44,55 @@ string Cliente::GenerarPlaca() {
 
     } while (
 
-        find(placas_fuera.begin(), placas_fuera.end(), placa) != placas_fuera.end()
+        find(
+            placas_fuera.begin(),
+            placas_fuera.end(),
+            placa
+        ) != placas_fuera.end()
     );
 
     placas_fuera.push_back(placa);
 
-    placas_celdas[placa] = GenerarCelda();
+    placas_celdas[placa] =
+        GenerarCelda();
 
     return placa;
 }
 
 
 string Cliente::GenerarCelda(){
-    int numero = 1 + rand() % 15;
-    return "A" + to_string(numero);
+
+    string celda;
+
+    bool ocupada;
+
+    do {
+
+        ocupada = false;
+
+        int numero = 1 + rand() % 15;
+
+        celda = "A" + to_string(numero);
+
+        for (auto &par : placas_celdas) {
+
+            if (par.second == celda) {
+
+                ocupada = true;
+                break;
+            }
+        }
+
+    } while (ocupada);
+
+    return celda;
 }
 
 void Cliente::EnviarPlaca() {
-
+#ifdef _WIN32
+    WSADATA wsa;
+    WSAStartup(MAKEWORD(2,2), &wsa);
+#endif
     bool entrada;
 
     string placaEnviar;
@@ -67,7 +108,8 @@ void Cliente::EnviarPlaca() {
     }
 
     /*
-      ¿Decide aleatoriamente: entrada o salida? parece que si
+      Decide aleatoriamente:
+      entrada o salida
     */
     if (
         !placas_fuera.empty() &&
@@ -79,32 +121,52 @@ void Cliente::EnviarPlaca() {
 
         entrada = true;
 
-        int indice = rand() % placas_fuera.size();
+        int indice =
+            rand() % placas_fuera.size();
 
-        placaEnviar = placas_fuera[indice];
+        placaEnviar =
+            placas_fuera[indice];
 
-        placas_dentro.push_back(placaEnviar);
+        placas_dentro.push_back(
+            placaEnviar
+        );
 
-        placas_fuera.erase(placas_fuera.begin() + indice);
+        placas_fuera.erase(
+            placas_fuera.begin() + indice
+        );
 
-    } else {
+        placas_celdas[placaEnviar] = GenerarCelda();
+
+    }else {
 
         entrada = false;
 
-        int indice = rand() % placas_dentro.size();
+        int indice =
+            rand() % placas_dentro.size();
 
-        placaEnviar = placas_dentro[indice];
+        placaEnviar =
+            placas_dentro[indice];
 
-        placas_fuera.push_back(placaEnviar);
+        placas_fuera.push_back(
+            placaEnviar
+        );
 
-        placas_dentro.erase(placas_dentro.begin() + indice);
+        placas_dentro.erase(
+            placas_dentro.begin() + indice
+        );
+
+        // liberar celda
+        placas_celdas.erase(placaEnviar);
     }
 
-    string celda = placas_celdas[placaEnviar];
+    string celda =
+        placas_celdas[placaEnviar];
 
-    string mensaje = placaEnviar + "|" + celda;
+    string mensaje =
+        placaEnviar + "|" + celda;
 
-    int sock = socket(AF_INET, SOCK_STREAM, 0);
+    int sock =
+        socket(AF_INET, SOCK_STREAM, 0);
 
     sockaddr_in serv_addr;
 
@@ -112,11 +174,25 @@ void Cliente::EnviarPlaca() {
 
     serv_addr.sin_port = htons(8080);
 
-    inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr);
+    inet_pton(
+        AF_INET,
+        //"127.0.0.1",
+        "192.168.0.17",
+        &serv_addr.sin_addr
+    );
 
-    connect(sock, (sockaddr*)&serv_addr, sizeof(serv_addr));
+    connect(
+        sock,
+        (sockaddr*)&serv_addr,
+        sizeof(serv_addr)
+    );
 
-    send(sock, mensaje.c_str(), mensaje.size(), 0);
+    send(
+        sock,
+        mensaje.c_str(),
+        mensaje.size(),
+        0
+    );
 
     if (entrada) {
 
@@ -129,8 +205,67 @@ void Cliente::EnviarPlaca() {
 
     cout << mensaje << endl;
 
+    //close(sock);
+#ifdef _WIN32
+    closesocket(sock);
+    WSACleanup();
+#else
+    close(sock);
+#endif
+}
+
+/*
+void Cliente::EnviarPlaca() {
+
+    if (placas.empty()) {
+
+        cout << "No hay placas\n";
+
+        return;
+    }
+
+    int indice = rand() % placas.size();
+
+    string placaEnviada = placas[indice];
+
+    placas_enviar.push_back(placaEnviada);
+
+    placas.erase(placas.begin() + indice);
+
+    int sock = socket(AF_INET, SOCK_STREAM, 0);
+
+    sockaddr_in serv_addr;
+
+    serv_addr.sin_family = AF_INET;
+
+    serv_addr.sin_port = htons(8080);
+
+    inet_pton(
+        AF_INET,
+        "127.0.0.1",
+        &serv_addr.sin_addr
+    );
+
+    connect(
+        sock,
+        (sockaddr*)&serv_addr,
+        sizeof(serv_addr)
+    );
+
+    send(
+        sock,
+        placaEnviada.c_str(),
+        placaEnviada.size(),
+        0
+    );
+
+    cout << "Placa enviada: "
+         << placaEnviada << endl;
+
     close(sock);
 }
+
+*/
 
 void Cliente::MostrarVectores() {
 
@@ -152,6 +287,7 @@ void Cliente::MostrarVectores() {
         cout << p << endl;
     }
 }
+
 
 vector<string>& Cliente::ObtenerPlacas() {
 

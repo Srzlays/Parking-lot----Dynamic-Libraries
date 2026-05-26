@@ -1,10 +1,20 @@
+#ifdef _WIN32
+    #include <winsock2.h>
+    #include <ws2tcpip.h>
+    #pragma comment(lib, "ws2_32.lib")
+#else
+    #include <sys/socket.h>
+    #include <arpa/inet.h>
+    #include <unistd.h>
+#endif
+
 #include "Servidor.h"
 
 #include <algorithm>
 #include <cstring>
 
-#include <sys/socket.h>
-#include <arpa/inet.h>
+//#include <sys/socket.h>
+//#include <arpa/inet.h>
 #include <unistd.h>
 
 #include <fstream>
@@ -18,54 +28,53 @@ string Servidor::ObtenerHoraActual() {
 
     char buffer[10];
 
-    strftime(buffer, sizeof(buffer), "%H:%M:%S", tiempo);
+    strftime(
+        buffer,
+        sizeof(buffer),
+        "%H:%M:%S",
+        tiempo
+    );
 
     return string(buffer);
 }
 
 void Servidor::GuardarJSON() {
-
-    ofstream archivo("parqueadero_tmp.json");
-
+    // Crear archivo de bloqueo
+    ofstream lockFile("parqueadero.lock");
+    lockFile.close();
+    
+    ofstream archivo("parqueadero.json");
     archivo << "[\n";
-
+    
     for (size_t i = 0; i < parqueadero.size(); i++) {
-
         archivo << "  {\n";
-
-        archivo << "    \"placa\": \""
-                << parqueadero[i].placa
-                << "\",\n";
-
-        archivo << "    \"celda\": \""
-                << parqueadero[i].celda
-                << "\",\n";
-
-        archivo << "    \"horaEntrada\": \""
-                << parqueadero[i].horaEntrada
-                << "\",\n";
-
-        archivo << "    \"horaSalida\": \""
-                << parqueadero[i].horaSalida
-                << "\"\n";
-
+        archivo << "    \"placa\": \"" << parqueadero[i].placa << "\",\n";
+        archivo << "    \"celda\": \"" << parqueadero[i].celda << "\",\n";
+        archivo << "    \"horaEntrada\": \"" << parqueadero[i].horaEntrada << "\",\n";
+        archivo << "    \"horaSalida\": \"" << parqueadero[i].horaSalida << "\"\n";
         archivo << "  }";
-
+        
         if (i < parqueadero.size() - 1) {
-
             archivo << ",";
         }
-
         archivo << "\n";
     }
-
-    archivo << "]";
-
+    
+    archivo << "]\n";
     archivo.close();
-
-    rename("parqueadero_tmp.json", "parqueadero.json");
+    
+    remove("parqueadero.lock");
 }
+
+
+
 void Servidor::Iniciar() {
+
+
+#ifdef _WIN32
+    WSADATA wsa;
+    WSAStartup(MAKEWORD(2,2), &wsa);
+#endif
 
     int servidor_fd, cliente_fd;
 
@@ -89,7 +98,12 @@ void Servidor::Iniciar() {
 
     while (true) {
 
-        cliente_fd = accept(servidor_fd, nullptr, nullptr);
+        cliente_fd =
+            accept(
+                servidor_fd,
+                nullptr,
+                nullptr
+            );
 
         memset(buffer, 0, sizeof(buffer));
 
@@ -97,15 +111,30 @@ void Servidor::Iniciar() {
 
         //string placa(buffer);
         //string datos(buffer);
-        int bytesRecibidos = read(cliente_fd, buffer, 1024);
+        //int bytesRecibidos = read(cliente_fd, buffer, 1024);
+    #ifdef _WIN32
+            int bytesRecibidos = recv(cliente_fd, buffer, 1024, 0);
+    #else
+            int bytesRecibidos = read(cliente_fd, buffer, 1024);
+    #endif
+        if (bytesRecibidos <= 0){
+            cout << "Error al recibir datos\n";
+
+    #ifdef _WIN32
+            closesocket(cliente_fd);
+    #else
+            close(cliente_fd);
+                //close(cliente_fd);
+    #endif
+            continue;
+        }
 
         string datos(buffer, bytesRecibidos);
+
         
         size_t separador = datos.find("|");
         if(separador == string::npos){
-            cout << "Formato incorrecto: "
-                 << datos
-                 << endl;
+            cout << "Formato incorrecto: " << datos << endl;
 
             close(cliente_fd);
             continue;
@@ -152,10 +181,20 @@ void Servidor::Iniciar() {
             parqueadero.erase(it);
         }
 
-        close(cliente_fd);
+        //close(cliente_fd);
+        #ifdef _WIN32
+            closesocket(cliente_fd);
+        #else
+            close(cliente_fd);
+        #endif
     }
 
-    close(servidor_fd);
+    //close(servidor_fd);
+    #ifdef _WIN32
+        closesocket(servidor_fd);
+        WSACleanup();
+    #else
+        close(servidor_fd);
+    #endif
+
 }
-
-
