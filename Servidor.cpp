@@ -13,8 +13,6 @@
 #include <algorithm>
 #include <cstring>
 
-//#include <sys/socket.h>
-//#include <arpa/inet.h>
 #include <unistd.h>
 
 #include <fstream>
@@ -65,8 +63,6 @@ void Servidor::GuardarJSON() {
     
     remove("parqueadero.lock");
 }
-
-
 
 void Servidor::Iniciar() {
 

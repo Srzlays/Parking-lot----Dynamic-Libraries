@@ -107,10 +107,6 @@ void Cliente::EnviarPlaca() {
         return;
     }
 
-    /*
-      Decide aleatoriamente:
-      entrada o salida
-    */
     if (
         !placas_fuera.empty() &&
         (
@@ -155,7 +151,6 @@ void Cliente::EnviarPlaca() {
             placas_dentro.begin() + indice
         );
 
-        // liberar celda
         placas_celdas.erase(placaEnviar);
     }
 
@@ -213,59 +208,6 @@ void Cliente::EnviarPlaca() {
     close(sock);
 #endif
 }
-
-/*
-void Cliente::EnviarPlaca() {
-
-    if (placas.empty()) {
-
-        cout << "No hay placas\n";
-
-        return;
-    }
-
-    int indice = rand() % placas.size();
-
-    string placaEnviada = placas[indice];
-
-    placas_enviar.push_back(placaEnviada);
-
-    placas.erase(placas.begin() + indice);
-
-    int sock = socket(AF_INET, SOCK_STREAM, 0);
-
-    sockaddr_in serv_addr;
-
-    serv_addr.sin_family = AF_INET;
-
-    serv_addr.sin_port = htons(8080);
-
-    inet_pton(
-        AF_INET,
-        "127.0.0.1",
-        &serv_addr.sin_addr
-    );
-
-    connect(
-        sock,
-        (sockaddr*)&serv_addr,
-        sizeof(serv_addr)
-    );
-
-    send(
-        sock,
-        placaEnviada.c_str(),
-        placaEnviada.size(),
-        0
-    );
-
-    cout << "Placa enviada: "
-         << placaEnviada << endl;
-
-    close(sock);
-}
-
-*/
 
 void Cliente::MostrarVectores() {
 

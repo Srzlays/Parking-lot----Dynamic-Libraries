@@ -14,16 +14,6 @@ Procesos::Procesos(Cliente &cliente)
 void Procesos::Procesar() {
 
     while (true) {
-        /*
-        while (
-            cliente.ObtenerPlacas().size() < 10
-        ) {
-
-            string nueva_placa = cliente.GenerarPlaca();
-
-            cout << "Generada: " << nueva_placa << endl;
-        }
-        */
         string nueva_placa = cliente.GenerarPlaca();
 
         cout << "Generada: " << nueva_placa << endl;
